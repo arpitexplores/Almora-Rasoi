@@ -25,8 +25,6 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
     e.preventDefault();
     
     // Parse the href to determine view and hash
-    // e.g. /menu -> 'full-menu'
-    // e.g. /#contact -> 'home' with 'contact' hash
     
     let view: View = 'home';
     let hash: string | undefined = undefined;
@@ -35,6 +33,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
       view = 'full-menu';
     } else if (href.startsWith('/gifting')) {
       view = 'gifting';
+    } else if (href.startsWith('/story')) {
+      view = 'story';
     } else if (href.includes('#')) {
       view = 'home';
       hash = href.split('#')[1];

@@ -9,13 +9,14 @@ import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import { View, MenuCategory } from './types';
 import { GOOGLE_SHEET_ID } from './constants';
-import { ArrowRight, Loader2, Gift, CheckCircle2, Star, Quote, Map } from 'lucide-react';
+import { ArrowRight, Loader2, Gift, CheckCircle2, Star, Quote, Map, Heart } from 'lucide-react';
 import { fetchMenuFromSheet } from './utils/menuFetcher';
 
 // Lazy load heavy page components for better performance (Code Splitting)
 const FullMenuPage = React.lazy(() => import('./components/FullMenuPage'));
 const GiftingPage = React.lazy(() => import('./components/GiftingPage'));
 const LegalPage = React.lazy(() => import('./components/LegalPage'));
+const StoryPage = React.lazy(() => import('./components/StoryPage'));
 
 function App() {
   const [view, setView] = useState<View>('home');
@@ -28,6 +29,7 @@ function App() {
   const getViewFromPath = (path: string): View => {
     if (path.startsWith('/menu')) return 'full-menu';
     if (path.startsWith('/gifting')) return 'gifting';
+    if (path.startsWith('/story')) return 'story';
     if (path.startsWith('/privacy')) return 'privacy';
     if (path.startsWith('/terms')) return 'terms';
     if (path.startsWith('/refund')) return 'refund';
@@ -39,6 +41,7 @@ function App() {
     switch (v) {
       case 'full-menu': return '/menu';
       case 'gifting': return '/gifting';
+      case 'story': return '/story';
       case 'privacy': return '/privacy';
       case 'terms': return '/terms';
       case 'refund': return '/refund';
@@ -84,6 +87,10 @@ function App() {
       case 'gifting':
         title = 'Wedding Gifting & Bulk Orders | Almora Rasoi';
         desc = 'Premium wedding bhaji boxes, customized corporate hampers, and bulk sweet orders in Dehradun.';
+        break;
+      case 'story':
+        title = 'Our Story | Almora Rasoi - From Home Kitchen to Brand';
+        desc = 'Read the inspiring journey of Mrs. Anuradha, who started Almora Rasoi from her home kitchen in 2008 to support her family.';
         break;
       case 'privacy':
         title = 'Privacy Policy | Almora Rasoi';
@@ -154,7 +161,7 @@ function App() {
       <Hero onExploreMenu={() => handleNavigate('full-menu')} />
       
       <main id="main-content">
-        {/* Intro Section - Our Story */}
+        {/* Intro Section - Our Story Teaser */}
         <section id="story" aria-labelledby="story-title" className="py-24 bg-white overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
@@ -163,44 +170,63 @@ function App() {
                 <div className="relative z-10 space-y-8">
                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full text-slate-600 text-xs font-black uppercase tracking-widest">
                     <Map size={14} className="text-[#A10508]" />
-                    Born in the Hills
+                    Est. 2008
                   </div>
                   <h2 id="story-title" className="text-5xl md:text-6xl font-black text-slate-900 leading-tight uppercase tracking-tighter">
-                    A Heritage of <br/>
-                    <span className="text-[#A10508] italic font-serif lowercase">purity & tradition.</span>
+                    Started from a <br/>
+                    <span className="text-[#A10508] italic font-serif lowercase">Mother's Kitchen.</span>
                   </h2>
                   <p className="text-slate-600 text-xl leading-relaxed font-medium italic">
-                    "At Almora Rasoi, we bring the authentic flavors of Almora to the streets of Dehradun. Every sweet is a handcrafted promise of purity, made with 100% pure desi ghee."
+                    "Almora Rasoi began in 2008 with Mrs. Anuradha making 60 tiffins a day to support her family's education. After a brief pause, the pandemic saw her children return, reviving the kitchen into the beloved brand it is today."
                   </p>
-                  <div className="grid grid-cols-2 gap-8 pt-6">
+                  
+                  <div className="flex flex-wrap gap-4 pt-4">
+                    <a 
+                      href="/story"
+                      onClick={(e) => { e.preventDefault(); handleNavigate('story'); }}
+                      className="inline-flex items-center gap-2 text-[#A10508] font-black uppercase tracking-widest border-b-2 border-[#A10508] pb-1 hover:text-[#8a0407] transition-colors"
+                    >
+                      Read Our Full Journey <ArrowRight size={16} />
+                    </a>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-8 pt-6 border-t border-slate-100">
                     <div>
-                      <p className="text-4xl font-black text-slate-900">100%</p>
-                      <p className="text-slate-400 uppercase tracking-widest text-[10px] font-black mt-1">Pure Desi Ghee</p>
+                      <p className="text-4xl font-black text-slate-900">2008</p>
+                      <p className="text-slate-400 uppercase tracking-widest text-[10px] font-black mt-1">The Beginning</p>
                     </div>
                     <div>
-                      <p className="text-4xl font-black text-slate-900">Satvik</p>
-                      <p className="text-slate-400 uppercase tracking-widest text-[10px] font-black mt-1">Prepared Daily</p>
+                      <p className="text-4xl font-black text-slate-900">2nd</p>
+                      <p className="text-slate-400 uppercase tracking-widest text-[10px] font-black mt-1">Branch Open</p>
                     </div>
                   </div>
                 </div>
               </article>
               
-              <div className="relative grid grid-cols-2 gap-4 h-[600px]">
+              <div className="relative grid grid-cols-2 gap-4 h-[500px]">
                 <div className="h-full pt-12">
                   <img 
-                    src="https://images.unsplash.com/photo-1628088062854-d1870b4553ad?auto=format&fit=crop&q=80&w=400" 
+                    src="https://images.unsplash.com/photo-1556910103-1c02745a30bf?auto=format&fit=crop&q=80&w=400" 
                     className="w-full h-full object-cover rounded-[3rem] shadow-2xl shadow-slate-200 border border-slate-100"
-                    alt="The clean and modern interior of Almora Rasoi Sweet Shop"
+                    alt="Traditional Indian kitchen preparation"
                     loading="lazy"
                   />
                 </div>
                 <div className="h-full pb-12">
                   <img 
-                    src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?auto=format&fit=crop&q=80&w=400" 
+                    src="https://images.unsplash.com/photo-1628088062854-d1870b4553ad?auto=format&fit=crop&q=80&w=400" 
                     className="w-full h-full object-cover rounded-[3rem] shadow-2xl shadow-slate-200 border border-slate-100"
-                    alt="Authentic Indian sweets on display at our counter"
+                    alt="The modern interior of Almora Rasoi"
                     loading="lazy"
                   />
+                </div>
+                {/* Floating Badge */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/90 backdrop-blur p-4 rounded-2xl shadow-xl flex items-center gap-3">
+                   <div className="bg-red-100 p-2 rounded-full text-[#A10508]"><Heart size={20} fill="currentColor" /></div>
+                   <div>
+                     <p className="font-black text-xs uppercase tracking-widest">Made with Love</p>
+                     <p className="text-[10px] text-slate-500 font-bold">Since 2008</p>
+                   </div>
                 </div>
               </div>
             </div>
@@ -376,6 +402,10 @@ function App() {
         
         {view === 'gifting' && (
           <GiftingPage onBack={() => handleNavigate('home')} />
+        )}
+        
+        {view === 'story' && (
+          <StoryPage onBack={() => handleNavigate('home')} />
         )}
         
         {['privacy', 'terms', 'refund'].includes(view) && (

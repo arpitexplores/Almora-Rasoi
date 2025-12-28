@@ -1,5 +1,5 @@
 
-export type View = 'home' | 'privacy' | 'terms' | 'refund' | 'full-menu' | 'gifting';
+export type View = 'home' | 'privacy' | 'terms' | 'refund' | 'full-menu' | 'gifting' | 'story';
 
 export interface MenuItem {
   name: string;
