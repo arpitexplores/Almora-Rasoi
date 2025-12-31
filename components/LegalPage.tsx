@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { ArrowLeft, Shield, FileText, RefreshCcw } from 'lucide-react';
 import { View } from '../types';
@@ -72,7 +71,7 @@ const LegalPage: React.FC<LegalPageProps> = ({ type, onBack }) => {
               <br />
               <strong>Email:</strong> support@almorarasoi.com
               <br />
-              <strong>Phone:</strong> +91 98765 43210
+              <strong>Phone:</strong> +91 96543 25380
             </p>
           </div>
         </div>
