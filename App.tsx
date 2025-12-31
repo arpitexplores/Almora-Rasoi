@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { Component, useState, useEffect, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import FeaturedSweets from './components/FeaturedSweets';
@@ -17,6 +16,44 @@ const FullMenuPage = React.lazy(() => import('./components/FullMenuPage'));
 const GiftingPage = React.lazy(() => import('./components/GiftingPage'));
 const LegalPage = React.lazy(() => import('./components/LegalPage'));
 const StoryPage = React.lazy(() => import('./components/StoryPage'));
+
+interface ErrorBoundaryProps {
+  children?: React.ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
+}
+
+// Simple Error Boundary to catch lazy loading errors
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  state: ErrorBoundaryState = { hasError: false };
+
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+  
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error("ErrorBoundary caught an error", error, errorInfo);
+  }
+  
+  render() {
+    if (this.state.hasError) {
+      const errorMessage = this.state.error instanceof Error ? this.state.error.message : 'Unknown error occurred';
+      return (
+        <div className="min-h-screen flex items-center justify-center flex-col text-center p-4">
+           <h2 className="text-2xl font-bold mb-4">Something went wrong loading the page.</h2>
+           <p className="text-slate-500 mb-4 text-sm">{errorMessage}</p>
+           <button onClick={() => window.location.reload()} className="bg-red-600 text-white px-6 py-2 rounded-full">
+             Reload Page
+           </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 function App() {
   const [view, setView] = useState<View>('home');
@@ -389,29 +426,31 @@ function App() {
     <div className="min-h-screen bg-white">
       <Navbar currentView={view} onNavigate={handleNavigate} />
       
-      <Suspense fallback={<PageLoader />}>
-        {view === 'home' && renderHome()}
-        
-        {view === 'full-menu' && (
-          <FullMenuPage 
-            data={menuData} 
-            loading={loading}
-            onBack={() => handleNavigate('home')} 
-          />
-        )}
-        
-        {view === 'gifting' && (
-          <GiftingPage onBack={() => handleNavigate('home')} />
-        )}
-        
-        {view === 'story' && (
-          <StoryPage onBack={() => handleNavigate('home')} />
-        )}
-        
-        {['privacy', 'terms', 'refund'].includes(view) && (
-          <LegalPage type={view as any} onBack={() => handleNavigate('home')} />
-        )}
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<PageLoader />}>
+          {view === 'home' && renderHome()}
+          
+          {view === 'full-menu' && (
+            <FullMenuPage 
+              data={menuData} 
+              loading={loading}
+              onBack={() => handleNavigate('home')} 
+            />
+          )}
+          
+          {view === 'gifting' && (
+            <GiftingPage onBack={() => handleNavigate('home')} />
+          )}
+          
+          {view === 'story' && (
+            <StoryPage onBack={() => handleNavigate('home')} />
+          )}
+          
+          {['privacy', 'terms', 'refund'].includes(view) && (
+            <LegalPage type={view as any} onBack={() => handleNavigate('home')} />
+          )}
+        </Suspense>
+      </ErrorBoundary>
 
       <Footer onNavigate={handleNavigate} />
 
