@@ -31,11 +31,6 @@ const TripAdvisorIcon = ({ size = 20, className = "" }: { size?: number, classNa
 
 const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, view: View, hash?: string) => {
-    e.preventDefault();
-    onNavigate(view, hash);
-  };
-
   const SOCIALS = [
     {
       icon: <TripAdvisorIcon size={20} />,
@@ -58,7 +53,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     <footer className="bg-slate-950 text-slate-400 py-12 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
-          <a href="/" onClick={(e) => handleLinkClick(e, 'home')} className="flex items-center gap-4 group">
+          <a href="#/" className="flex items-center gap-4 group">
             <img 
               src="https://almorarasoi.com/images/Almora_Rasoi_Logo.png" 
               alt="Almora Rasoi" 
@@ -93,18 +88,18 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div>
             <h5 className="text-white font-bold mb-4 uppercase tracking-widest text-xs">Menu</h5>
             <ul className="space-y-2 text-sm">
-              <li><a href="/menu" onClick={(e) => handleLinkClick(e, 'full-menu')} className="hover:text-[#A10508] transition-colors">Desi Ghee Sweets</a></li>
-              <li><a href="/menu" onClick={(e) => handleLinkClick(e, 'full-menu')} className="hover:text-[#A10508] transition-colors">Bengali Specialties</a></li>
-              <li><a href="/menu" onClick={(e) => handleLinkClick(e, 'full-menu')} className="hover:text-[#A10508] transition-colors">Namkeen & Snacks</a></li>
+              <li><a href="#/menu" className="hover:text-[#A10508] transition-colors">Desi Ghee Sweets</a></li>
+              <li><a href="#/menu" className="hover:text-[#A10508] transition-colors">Bengali Specialties</a></li>
+              <li><a href="#/menu" className="hover:text-[#A10508] transition-colors">Namkeen & Snacks</a></li>
             </ul>
           </div>
           
           <div>
             <h5 className="text-white font-bold mb-4 uppercase tracking-widest text-xs">Occasions</h5>
             <ul className="space-y-2 text-sm">
-              <li><a href="/#festive" onClick={(e) => handleLinkClick(e, 'home', 'festive')} className="hover:text-[#A10508] transition-colors">Wedding Bhaji</a></li>
-              <li><a href="/gifting" onClick={(e) => handleLinkClick(e, 'gifting')} className="hover:text-[#A10508] transition-colors">Corporate Gifting</a></li>
-              <li><a href="/gifting" onClick={(e) => handleLinkClick(e, 'gifting')} className="hover:text-[#A10508] transition-colors">Custom Hampers</a></li>
+              <li><a href="#contact" className="hover:text-[#A10508] transition-colors">Wedding Bhaji</a></li>
+              <li><a href="#/gifting" className="hover:text-[#A10508] transition-colors">Corporate Gifting</a></li>
+              <li><a href="#/gifting" className="hover:text-[#A10508] transition-colors">Custom Hampers</a></li>
             </ul>
           </div>
 
@@ -128,11 +123,11 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         <div className="flex flex-col md:flex-row justify-between items-center text-xs uppercase tracking-[0.2em] font-medium opacity-60">
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="/privacy" onClick={(e) => handleLinkClick(e, 'privacy')} className="hover:text-white">Privacy</a>
+            <a href="#/privacy" className="hover:text-white">Privacy</a>
             <span className="hidden md:inline">•</span>
-            <a href="/terms" onClick={(e) => handleLinkClick(e, 'terms')} className="hover:text-white">Terms</a>
+            <a href="#/terms" className="hover:text-white">Terms</a>
             <span className="hidden md:inline">•</span>
-            <a href="/refund" onClick={(e) => handleLinkClick(e, 'refund')} className="hover:text-white">Refunds</a>
+            <a href="#/refund" className="hover:text-white">Refunds</a>
           </div>
           <p className="flex items-center gap-1 mt-4 md:mt-0">
             © {new Date().getFullYear()} Almora Rasoi • Crafted with <Heart size={12} className="text-[#A10508]" fill="currentColor" /> in Dehradun

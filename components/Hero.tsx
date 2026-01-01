@@ -49,8 +49,7 @@ const Hero: React.FC<HeroProps> = ({ onExploreMenu }) => {
           
           <div className="flex flex-col sm:flex-row gap-5">
             <a 
-              href="/menu"
-              onClick={(e) => { e.preventDefault(); onExploreMenu?.(); }} 
+              href="#/menu"
               aria-label="Explore the sweet and snack menu"
               className="bg-[#A10508] text-white px-10 py-5 rounded-full font-black text-lg hover:bg-[#8a0407] transition-all flex items-center justify-center gap-3 shadow-2xl shadow-red-900/40"
             >

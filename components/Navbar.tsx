@@ -21,29 +21,25 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    
-    // Parse the href to determine view and hash
-    
-    let view: View = 'home';
-    let hash: string | undefined = undefined;
-
-    if (href.startsWith('/menu')) {
-      view = 'full-menu';
-    } else if (href.startsWith('/gifting')) {
-      view = 'gifting';
-    } else if (href.startsWith('/story')) {
-      view = 'story';
-    } else if (href.includes('#')) {
-      view = 'home';
-      hash = href.split('#')[1];
-    } else {
-      view = 'home';
-    }
-
-    onNavigate(view, hash);
     setIsOpen(false);
+
+    // Map hrefs to Views
+    if (href === '#/menu') {
+      onNavigate('full-menu');
+    } else if (href === '#/gifting') {
+      onNavigate('gifting');
+    } else if (href === '#/story') {
+      onNavigate('story');
+    } else if (href === '#contact') {
+      onNavigate('home', 'contact');
+    } else if (href === '#/') {
+      onNavigate('home');
+    } else {
+      // Fallback for unexpected links
+      window.location.hash = href;
+    }
   };
 
   const openWhatsApp = () => {
@@ -59,10 +55,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <a 
-            href="/"
-            onClick={(e) => handleNavClick(e, '/')}
+            href="#/"
             className="flex-shrink-0 flex items-center gap-3"
             aria-label="Almora Rasoi Home"
+            onClick={(e) => handleLinkClick(e, '#/')}
           >
             <img 
               src="https://almorarasoi.com/images/Almora_Rasoi_Logo.png" 
@@ -83,7 +79,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
                 <a
                   key={item.label}
                   href={item.href}
-                  onClick={(e) => handleNavClick(e, item.href)}
+                  onClick={(e) => handleLinkClick(e, item.href)}
                   className={`text-sm font-bold uppercase tracking-widest transition-colors hover:text-[#A10508] cursor-pointer ${navTextClass}`}
                 >
                   {item.label}
@@ -118,7 +114,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             <a
               key={item.label}
               href={item.href}
-              onClick={(e) => handleNavClick(e, item.href)}
+              onClick={(e) => handleLinkClick(e, item.href)}
               className="block px-3 py-3 text-sm font-black uppercase tracking-widest text-slate-700 hover:text-[#A10508] hover:bg-slate-50 rounded-xl"
             >
               {item.label}

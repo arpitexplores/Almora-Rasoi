@@ -1,4 +1,5 @@
-import React, { Component, useState, useEffect, Suspense } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import FeaturedSweets from './components/FeaturedSweets';
@@ -6,112 +7,72 @@ import MenuSection from './components/MenuSection';
 import ContactInfo from './components/ContactInfo';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
+import FullMenuPage from './components/FullMenuPage';
+import GiftingPage from './components/GiftingPage';
+import LegalPage from './components/LegalPage';
+import StoryPage from './components/StoryPage';
 import { View, MenuCategory } from './types';
 import { GOOGLE_SHEET_ID } from './constants';
 import { ArrowRight, Loader2, Gift, CheckCircle2, Star, Quote, Map, Heart } from 'lucide-react';
 import { fetchMenuFromSheet } from './utils/menuFetcher';
-
-// Lazy load heavy page components for better performance (Code Splitting)
-const FullMenuPage = React.lazy(() => import('./components/FullMenuPage'));
-const GiftingPage = React.lazy(() => import('./components/GiftingPage'));
-const LegalPage = React.lazy(() => import('./components/LegalPage'));
-const StoryPage = React.lazy(() => import('./components/StoryPage'));
-
-interface ErrorBoundaryProps {
-  children?: React.ReactNode;
-}
-
-interface ErrorBoundaryState {
-  hasError: boolean;
-  error?: Error;
-}
-
-// Simple Error Boundary to catch lazy loading errors
-class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  state: ErrorBoundaryState = { hasError: false };
-
-  static getDerivedStateFromError(error: any) {
-    return { hasError: true, error };
-  }
-  
-  componentDidCatch(error: any, errorInfo: any) {
-    console.error("ErrorBoundary caught an error", error, errorInfo);
-  }
-  
-  render() {
-    if (this.state.hasError) {
-      const errorMessage = this.state.error instanceof Error ? this.state.error.message : 'Unknown error occurred';
-      return (
-        <div className="min-h-screen flex items-center justify-center flex-col text-center p-4">
-           <h2 className="text-2xl font-bold mb-4">Something went wrong loading the page.</h2>
-           <p className="text-slate-500 mb-4 text-sm">{errorMessage}</p>
-           <button onClick={() => window.location.reload()} className="bg-red-600 text-white px-6 py-2 rounded-full">
-             Reload Page
-           </button>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
 
 function App() {
   const [view, setView] = useState<View>('home');
   const [menuData, setMenuData] = useState<MenuCategory[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // --- Router & SEO Logic ---
+  // --- Router & SEO Logic (Hash Based) ---
 
-  // Helper to determine View from URL path
-  const getViewFromPath = (path: string): View => {
-    if (path.startsWith('/menu')) return 'full-menu';
-    if (path.startsWith('/gifting')) return 'gifting';
-    if (path.startsWith('/story')) return 'story';
-    if (path.startsWith('/privacy')) return 'privacy';
-    if (path.startsWith('/terms')) return 'terms';
-    if (path.startsWith('/refund')) return 'refund';
-    return 'home';
+  const getHash = () => {
+    // Returns the hash without the leading '#' and optional '/'
+    // e.g., '#/menu' -> 'menu', '#contact' -> 'contact'
+    return window.location.hash.replace(/^#\/?/, '');
   };
 
-  // Helper to determine URL path from View
-  const getPathFromView = (v: View): string => {
-    switch (v) {
-      case 'full-menu': return '/menu';
-      case 'gifting': return '/gifting';
-      case 'story': return '/story';
-      case 'privacy': return '/privacy';
-      case 'terms': return '/terms';
-      case 'refund': return '/refund';
-      case 'home': default: return '/';
+  const handleRoute = () => {
+    const hash = getHash();
+    
+    // Handle anchor links on home page (like #contact)
+    if (hash === 'contact') {
+      setView('home');
+      setTimeout(() => {
+        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return;
+    }
+    
+    // Check for main views
+    if (hash === 'menu' || hash === 'full-menu') {
+      setView('full-menu');
+    } else if (hash === 'gifting') {
+      setView('gifting');
+    } else if (hash === 'story') {
+      setView('story');
+    } else if (hash === 'privacy') {
+      setView('privacy');
+    } else if (hash === 'terms') {
+      setView('terms');
+    } else if (hash === 'refund') {
+      setView('refund');
+    } else {
+      // Default / Home
+      setView('home');
+      if (!hash) {
+         window.scrollTo(0, 0);
+      }
     }
   };
 
-  // 1. Initialize View from URL on Mount & Handle Browser Back/Forward
+  // 1. Listen for Hash Changes
   useEffect(() => {
-    const handleUrlChange = () => {
-      const currentView = getViewFromPath(window.location.pathname);
-      setView(currentView);
-      
-      // Handle hash scrolling if present
-      const hash = window.location.hash;
-      if (hash) {
-        setTimeout(() => {
-          const id = hash.replace('#', '');
-          document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      } else if (currentView === 'home' && window.location.pathname === '/') {
-         window.scrollTo(0, 0);
-      }
-    };
-
     // Initial check
-    handleUrlChange();
+    handleRoute();
 
-    window.addEventListener('popstate', handleUrlChange);
-    return () => window.removeEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleRoute);
+    return () => window.removeEventListener('hashchange', handleRoute);
   }, []);
 
-  // 2. Update SEO Metadata (Title & Description) when View changes
+  // 2. Update SEO Metadata
   useEffect(() => {
     let title = 'Almora Rasoi | Best Desi Ghee Sweets & Bal Mithai in Dehradun';
     let desc = 'Authentic Indian sweets made with 100% pure Desi Ghee. Experience the heritage of Almora in Dehradun.';
@@ -145,25 +106,26 @@ function App() {
     if (metaDesc) metaDesc.setAttribute('content', desc);
   }, [view]);
 
-  // 3. Navigation Handler (Updates State & Pushes URL)
+  // 3. Navigation Handler (Simply updates hash)
   const handleNavigate = (newView: View, hash?: string) => {
-    const basePath = getPathFromView(newView);
-    const fullPath = hash ? `${basePath}#${hash}` : basePath;
-    
-    // Only push state if URL is different
-    if (window.location.pathname + window.location.hash !== fullPath) {
-      window.history.pushState({}, '', fullPath);
+    let targetHash = '';
+
+    switch (newView) {
+      case 'full-menu': targetHash = '/menu'; break;
+      case 'gifting': targetHash = '/gifting'; break;
+      case 'story': targetHash = '/story'; break;
+      case 'privacy': targetHash = '/privacy'; break;
+      case 'terms': targetHash = '/terms'; break;
+      case 'refund': targetHash = '/refund'; break;
+      case 'home': targetHash = '/'; break;
     }
-    
-    setView(newView);
-    
-    if (!hash) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      setTimeout(() => {
-        document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
-      }, 50);
+
+    if (hash) {
+      targetHash = hash; // Direct hash like 'contact'
     }
+
+    // This triggers 'hashchange' which calls handleRoute()
+    window.location.hash = targetHash;
   };
 
   // --- Data Loading ---
@@ -186,12 +148,6 @@ function App() {
     const encodedMsg = message ? encodeURIComponent(message) : '';
     window.open(`https://wa.me/919654325380${encodedMsg ? `?text=${encodedMsg}` : ''}`, '_blank');
   };
-
-  const PageLoader = () => (
-    <div className="min-h-screen flex items-center justify-center">
-      <Loader2 className="animate-spin text-[#A10508]" size={48} />
-    </div>
-  );
 
   const renderHome = () => (
     <>
@@ -219,8 +175,7 @@ function App() {
                   
                   <div className="flex flex-wrap gap-4 pt-4">
                     <a 
-                      href="/story"
-                      onClick={(e) => { e.preventDefault(); handleNavigate('story'); }}
+                      href="#/story"
                       className="inline-flex items-center gap-2 text-[#A10508] font-black uppercase tracking-widest border-b-2 border-[#A10508] pb-1 hover:text-[#8a0407] transition-colors"
                     >
                       Read Our Full Journey <ArrowRight size={16} />
@@ -257,7 +212,6 @@ function App() {
                     loading="lazy"
                   />
                 </div>
-                {/* Floating Badge */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/90 backdrop-blur p-4 rounded-2xl shadow-xl flex items-center gap-3">
                    <div className="bg-red-100 p-2 rounded-full text-[#A10508]"><Heart size={20} fill="currentColor" /></div>
                    <div>
@@ -334,8 +288,7 @@ function App() {
               <MenuSection data={menuData} />
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 flex justify-center">
                 <a 
-                  href="/menu"
-                  onClick={(e) => { e.preventDefault(); handleNavigate('full-menu'); }}
+                  href="#/menu"
                   aria-label="View the full menu of Almora Rasoi"
                   className="group bg-slate-950 text-white px-12 py-5 rounded-full font-black text-lg hover:bg-black transition-all flex items-center gap-3 shadow-2xl shadow-slate-300"
                 >
@@ -402,8 +355,7 @@ function App() {
 
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a 
-                    href="/gifting"
-                    onClick={(e) => { e.preventDefault(); handleNavigate('gifting'); }}
+                    href="#/gifting"
                     aria-label="View our special gifting options"
                     className="bg-[#A10508] text-white px-10 py-5 rounded-full font-black text-lg hover:bg-[#8a0407] transition-all shadow-xl shadow-red-900/40 flex items-center justify-center gap-3"
                   >
@@ -426,31 +378,27 @@ function App() {
     <div className="min-h-screen bg-white">
       <Navbar currentView={view} onNavigate={handleNavigate} />
       
-      <ErrorBoundary>
-        <Suspense fallback={<PageLoader />}>
-          {view === 'home' && renderHome()}
-          
-          {view === 'full-menu' && (
-            <FullMenuPage 
-              data={menuData} 
-              loading={loading}
-              onBack={() => handleNavigate('home')} 
-            />
-          )}
-          
-          {view === 'gifting' && (
-            <GiftingPage onBack={() => handleNavigate('home')} />
-          )}
-          
-          {view === 'story' && (
-            <StoryPage onBack={() => handleNavigate('home')} />
-          )}
-          
-          {['privacy', 'terms', 'refund'].includes(view) && (
-            <LegalPage type={view as any} onBack={() => handleNavigate('home')} />
-          )}
-        </Suspense>
-      </ErrorBoundary>
+      {view === 'home' && renderHome()}
+      
+      {view === 'full-menu' && (
+        <FullMenuPage 
+          data={menuData} 
+          loading={loading}
+          onBack={() => handleNavigate('home')} 
+        />
+      )}
+      
+      {view === 'gifting' && (
+        <GiftingPage onBack={() => handleNavigate('home')} />
+      )}
+      
+      {view === 'story' && (
+        <StoryPage onBack={() => handleNavigate('home')} />
+      )}
+      
+      {['privacy', 'terms', 'refund'].includes(view) && (
+        <LegalPage type={view as any} onBack={() => handleNavigate('home')} />
+      )}
 
       <Footer onNavigate={handleNavigate} />
 

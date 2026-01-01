@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { ArrowLeft, Clock, Heart, Users, Home, TrendingUp, MapPin } from 'lucide-react';
+import { ArrowLeft, Clock, Heart, Users, Home, TrendingUp, MapPin, ArrowRight } from 'lucide-react';
 
 interface StoryPageProps {
   onBack: () => void;
@@ -56,11 +56,18 @@ const StoryPage: React.FC<StoryPageProps> = ({ onBack }) => {
     }
   ];
 
+  // Note: StoryPage in App.tsx receives onBack={() => handleNavigate('home')}. 
+  // However, the "Order Now" button should ideally go to the menu. 
+  // Since we don't have a direct 'onGoToMenu' prop, we can use the window hash or link directly,
+  // but using a standard anchor with correct hash is safest here if we want to change view.
+  // Alternatively, we can use the onBack if the parent handles it, but currently it goes to home.
+  // The best fix is to use a simple anchor that updates hash, which App.tsx catches.
+
   return (
     <div className="min-h-screen bg-slate-50 pt-32 pb-24">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <a 
-          href="/"
+          href="#/"
           onClick={(e) => { e.preventDefault(); onBack(); }}
           className="group flex items-center gap-2 text-slate-500 hover:text-[#A10508] font-bold transition-colors mb-12 inline-flex"
         >
@@ -126,12 +133,11 @@ const StoryPage: React.FC<StoryPageProps> = ({ onBack }) => {
             Every order you place supports the dream that Mrs. Anuradha started in 2008. Taste the tradition today.
           </p>
           <a 
-            href="/menu"
-            onClick={(e) => { e.preventDefault(); onBack(); }}
+            href="#/menu"
             className="inline-flex items-center gap-2 bg-[#A10508] text-white px-8 py-4 rounded-full font-bold uppercase tracking-widest hover:bg-[#8a0407] transition-all shadow-lg"
           >
             Order Now
-            <ArrowLeft size={20} className="rotate-180" />
+            <ArrowRight size={20} />
           </a>
         </div>
       </div>

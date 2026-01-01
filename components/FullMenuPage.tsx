@@ -20,7 +20,7 @@ const FullMenuPage: React.FC<FullMenuPageProps> = ({ data, loading, onBack }) =>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-16">
           <div>
             <a 
-              href="/"
+              href="#/"
               onClick={(e) => { e.preventDefault(); onBack(); }}
               className="group flex items-center gap-2 text-slate-500 hover:text-[#A10508] font-bold transition-colors mb-4 inline-flex"
             >
@@ -101,7 +101,7 @@ const FullMenuPage: React.FC<FullMenuPageProps> = ({ data, loading, onBack }) =>
               Request Bulk Quote
             </button>
             <a 
-              href="/"
+              href="#/"
               onClick={(e) => { e.preventDefault(); onBack(); }}
               className="bg-white/10 text-white border border-white/20 px-10 py-4 rounded-full font-bold text-lg hover:bg-white/20 transition-all inline-flex items-center justify-center"
             >

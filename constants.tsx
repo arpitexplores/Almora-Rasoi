@@ -23,9 +23,9 @@ export const SHOP_GALLERY = [
 ];
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Our Story', href: '/story' },
-  { label: 'Menu', href: '/menu' },
-  { label: 'Gifting & Bulk', href: '/gifting' },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'Home', href: '#/' },
+  { label: 'Our Story', href: '#/story' },
+  { label: 'Menu', href: '#/menu' },
+  { label: 'Gifting & Bulk', href: '#/gifting' },
+  { label: 'Contact', href: '#contact' },
 ];

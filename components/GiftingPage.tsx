@@ -1,10 +1,28 @@
 
 import React, { useEffect } from 'react';
-import { ArrowLeft, Gift, ShieldCheck, Truck, Users, MessageCircle, Star, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Gift, ShieldCheck, Truck, Users, MessageCircle, Star, ArrowRight, Quote } from 'lucide-react';
 
 interface GiftingPageProps {
   onBack: () => void;
 }
+
+const GIFTING_TESTIMONIALS = [
+  {
+    text: "The customized boxes for my sister's wedding were a huge hit! Everyone loved the authenticity of the Bal Mithai, and the personalized branding made it so special.",
+    author: "Priya S.",
+    type: "Wedding Order"
+  },
+  {
+    text: "We ordered 200 hampers for our corporate Diwali event. The packaging was premium, delivery was seamless, and the sweets were fresh as promised.",
+    author: "Amit Khurana",
+    type: "Corporate Client"
+  },
+  {
+    text: "Almora Rasoi handled our bulk order for a family function with such professionalism. The taste took us back to the hills. Highly recommended!",
+    author: "Meera Joshi",
+    type: "Bulk Order"
+  }
+];
 
 const GiftingPage: React.FC<GiftingPageProps> = ({ onBack }) => {
   useEffect(() => {
@@ -169,8 +187,47 @@ const GiftingPage: React.FC<GiftingPageProps> = ({ onBack }) => {
         </div>
       </section>
 
+      {/* Customer Testimonials Section */}
+      <section className="py-24 bg-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-50 text-amber-600 font-bold text-xs uppercase tracking-widest mb-4 border border-amber-100">
+              <Star size={14} fill="currentColor" />
+              Client Love
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter">
+              Stories of <span className="text-red-600">Celebration</span>
+            </h2>
+            <p className="text-slate-500 mt-4 text-lg font-medium italic">
+              Trusted by families and businesses across Dehradun.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {GIFTING_TESTIMONIALS.map((testimonial, idx) => (
+              <div key={idx} className="bg-slate-50 p-10 rounded-[2.5rem] border border-slate-100 relative group hover:shadow-lg transition-shadow">
+                 <Quote size={48} className="text-red-600/10 absolute top-8 right-8" />
+                 <div className="flex gap-1 text-amber-500 mb-6">
+                   {[1,2,3,4,5].map(i => <Star key={i} size={16} fill="currentColor" />)}
+                 </div>
+                 <blockquote className="text-slate-600 text-lg leading-relaxed mb-8 italic font-medium">"{testimonial.text}"</blockquote>
+                 <div className="flex items-center gap-4">
+                   <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white font-black uppercase tracking-widest shadow-lg shadow-red-600/20">
+                      {testimonial.author[0]}
+                   </div>
+                   <div>
+                     <p className="font-black text-slate-900 uppercase tracking-tight">{testimonial.author}</p>
+                     <p className="text-xs font-bold text-red-600 uppercase tracking-widest">{testimonial.type}</p>
+                   </div>
+                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Why Choose Almora Section */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[
@@ -179,7 +236,7 @@ const GiftingPage: React.FC<GiftingPageProps> = ({ onBack }) => {
               { icon: <Users size={32} />, title: "EXPERTS", desc: "Custom curation advisors for your special events." },
               { icon: <MessageCircle size={32} />, title: "FAST QUOTES", desc: "Instant pricing for wedding and party orders." }
             ].map((item, idx) => (
-              <div key={idx} className="text-center group p-8 rounded-3xl hover:bg-slate-50 transition-all duration-300">
+              <div key={idx} className="text-center group p-8 rounded-3xl bg-white hover:bg-slate-50 transition-all duration-300 shadow-sm hover:shadow-md border border-slate-100">
                 <div className="w-20 h-20 bg-red-50 text-red-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 group-hover:bg-red-600 group-hover:text-white transition-all duration-500">
                   {item.icon}
                 </div>

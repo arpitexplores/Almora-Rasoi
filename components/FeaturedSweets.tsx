@@ -57,6 +57,8 @@ const FeaturedSweets: React.FC<FeaturedSweetsProps> = ({ onNavigate }) => {
                   alt={`${item.title} - ${item.subtitle}`} 
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
                   loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
                 <div className="absolute bottom-8 left-8 right-8">
@@ -69,8 +71,7 @@ const FeaturedSweets: React.FC<FeaturedSweetsProps> = ({ onNavigate }) => {
                 <div className="flex items-center justify-between">
                   <span className="w-12 h-1 bg-[#A10508] rounded-full group-hover:w-20 transition-all duration-500" aria-hidden="true"></span>
                   <a 
-                    href="/menu"
-                    onClick={(e) => { e.preventDefault(); onNavigate?.('full-menu'); }}
+                    href="#/menu"
                     aria-label={`Find ${item.title} in our menu`} 
                     className="text-[#A10508] font-black text-xs uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all"
                   >
